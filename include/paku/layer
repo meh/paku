@@ -76,6 +76,83 @@ namespace paku {
 	};
 
 	template<typename Parent>
+	class layer<packet::icmp, Parent> : public layer_base<packet::icmp, Parent> {
+		public:
+			layer(const void* buffer, size_t length)
+				: layer_base<packet::icmp, Parent>(buffer, length)
+			{ check(); }
+
+			layer(Parent parent, const void* buffer, size_t length)
+				: layer_base<packet::icmp, Parent>(parent, buffer, length)
+			{ check(); }
+
+		private:
+			void
+			check()
+			{
+				// base ICMP fields
+				if (this->length() < 4) {
+					throw std::length_error("buffer too small");
+				}
+
+				switch (this->value().type()) {
+					case packet::icmp::ECHO_REQUEST:
+					case packet::icmp::ECHO_REPLY: {
+						if (this->length() < 8) {
+							throw std::length_error("buffer too small");
+						}
+
+						break;
+					}
+
+					case packet::icmp::TIMESTAMP_REQUEST:
+					case packet::icmp::TIMESTAMP_REPLY: {
+						if (this->length() < 20) {
+							throw std::length_error("buffer too small");
+						}
+
+						break;
+					}
+
+					case packet::icmp::INFORMATION_REQUEST:
+					case packet::icmp::INFORMATION_REPLY: {
+						if (this->length() < 8) {
+							throw std::length_error("buffer too small");
+						}
+
+						break;
+					}
+
+					case packet::icmp::DESTINATION_UNREACHABLE:
+					case packet::icmp::TIME_EXCEEDED:
+					case packet::icmp::SOURCE_QUENCH:
+					case packet::icmp::PARAMETER_PROBLEM:
+					case packet::icmp::REDIRECT_MESSAGE: {
+						// base ICMP fields, unused field and IP IHL
+						if (this->length() < 9) {
+							throw std::length_error("buffer too small");
+						}
+
+						auto prev = this->value().template details<packet::icmp::previous>();
+
+						// base ICMP fields, unused field, IP header, original data
+						if (this->length() < 8 + (static_cast<size_t>(prev.header().header()) * 4) + 8) {
+							throw std::length_error("buffer too small");
+						}
+
+						break;
+					}
+
+					default: {
+						if (this->length() < 8) {
+							throw std::length_error("buffer too small");
+						}
+					}
+				}
+			}
+	};
+
+	template<typename Parent>
 	class layer<packet::ip, Parent> : public layer_base<packet::ip, Parent> {
 		public:
 			layer(const void* buffer, size_t length)
@@ -90,10 +167,12 @@ namespace paku {
 			void
 			check()
 			{
+				// header length
 				if (this->length() < 1) {
 					throw std::length_error("buffer too small");
 				}
 
+				// total length
 				if (this->length() < this->value().header() * 4) {
 					throw std::length_error("buffer too small");
 				}

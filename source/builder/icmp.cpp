@@ -20,7 +20,8 @@ namespace paku {
 		std::shared_ptr<builder::buffer>
 		icmp::build()
 		{
-			packet()->checksum = packet::ip::checksum(_buffer->data(), _buffer->length());
+			packet()->checksum = packet::ip::checksum(
+				_buffer->data(), _buffer->length());
 
 			return _buffer;
 		}
@@ -80,7 +81,7 @@ namespace paku {
 		}
 
 		class icmp::echo&
-		icmp::echo::data(uint8_t* data, size_t length)
+		icmp::echo::data(const void* data, size_t length)
 		{
 			_parent.buffer()->more(length);
 			std::memcpy(_parent.buffer()->data() + 8, data, length);

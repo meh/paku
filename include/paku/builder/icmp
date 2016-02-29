@@ -21,7 +21,7 @@ namespace paku {
 
 						echo& identifier(uint16_t value);
 						echo& sequence(uint16_t value);
-						echo& data(uint8_t* data, size_t length);
+						echo& data(const void* data, size_t length);
 
 					private:
 						class icmp& _parent;

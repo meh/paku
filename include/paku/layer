@@ -13,13 +13,13 @@ namespace paku {
 	template<typename Type, typename Parent = NONE>
 	class layer_base {
 		public:
-			layer_base(const uint8_t* buffer, size_t length)
-				: _buffer(buffer),
+			layer_base(const void* buffer, size_t length)
+				: _buffer(static_cast<const uint8_t*>(buffer)),
 					_length(length),
 					_value(reinterpret_cast<const typename Type::raw*>(buffer))
 			{ }
 
-			layer_base(Parent parent, const uint8_t* buffer, size_t length)
+			layer_base(Parent parent, const void* buffer, size_t length)
 				: layer_base(buffer, length)
 			{
 				_parent = parent;
@@ -66,11 +66,11 @@ namespace paku {
 	template<typename Type, typename Parent = NONE>
 	class layer : public layer_base<Type, Parent> {
 		public:
-			layer(const uint8_t* buffer, size_t length)
+			layer(const void* buffer, size_t length)
 				: layer_base<Type, Parent>(buffer, length)
 			{ }
 
-			layer(Parent parent, const uint8_t* buffer, size_t length)
+			layer(Parent parent, const void* buffer, size_t length)
 				: layer_base<Type, Parent>(parent, buffer, length)
 			{ }
 	};
@@ -78,11 +78,11 @@ namespace paku {
 	template<typename Parent>
 	class layer<packet::ip, Parent> : public layer_base<packet::ip, Parent> {
 		public:
-			layer(const uint8_t* buffer, size_t length)
+			layer(const void* buffer, size_t length)
 				: layer_base<packet::ip, Parent>(buffer, length)
 			{ check(); }
 
-			layer(Parent parent, const uint8_t* buffer, size_t length)
+			layer(Parent parent, const void* buffer, size_t length)
 				: layer_base<packet::ip, Parent>(parent, buffer, length)
 			{ check(); }
 
@@ -128,7 +128,7 @@ namespace paku {
 	template<>
 	class layer<packet::ether, NONE> : public layer_base<packet::ether, NONE> {
 		public:
-			layer(const uint8_t* buffer, size_t length)
+			layer(const void* buffer, size_t length)
 				: layer_base<packet::ether, NONE>(buffer, length)
 			{ check(); }
 

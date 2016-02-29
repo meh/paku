@@ -1,6 +1,6 @@
 TARGET = libpaku
 
-CXXFLAGS = -std=c++1y -Iinclude/paku -Ivendor/optional -Ivendor/variant -fPIC -Wall -Wextra -Os
+CXXFLAGS = -std=c++1y -Iinclude -Iinclude/paku -Ivendor/optional -Ivendor/variant -fPIC -Wall -Wextra -Os
 LDFLAGS =
 
 SRCS = \

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "common"
-#include "builder/base"
-#include "packet/icmp"
+#include <paku/common>
+#include <paku/builder/base>
+#include <paku/packet/icmp>
 
 namespace paku {
 	namespace builder {

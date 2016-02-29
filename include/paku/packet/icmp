@@ -1,7 +1,7 @@
 #pragma once
 
-#include "common"
-#include "ip"
+#include <paku/common>
+#include <paku/packet/ip>
 
 namespace paku {
 	namespace packet {

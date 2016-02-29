@@ -1,7 +1,7 @@
 #pragma once
 
-#include "common"
-#include "builder/buffer"
+#include <paku/common>
+#include <paku/builder/buffer>
 
 namespace paku {
 	namespace builder {

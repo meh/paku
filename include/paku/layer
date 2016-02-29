@@ -1,10 +1,10 @@
 #pragma once
 
-#include "common"
+#include <paku/common>
 
-#include "packet/ether"
-#include "packet/ip"
-#include "packet/icmp"
+#include <paku/packet/ether>
+#include <paku/packet/ip>
+#include <paku/packet/icmp>
 
 namespace paku {
 	typedef int NONE;

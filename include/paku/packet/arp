@@ -1,6 +1,6 @@
 #pragma once
 
-#include "common"
+#include <paku/common>
 
 namespace paku {
 	namespace packet {

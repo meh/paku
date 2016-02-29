@@ -122,7 +122,7 @@ namespace paku {
 		icmp::code() const
 		{
 			if (type() != icmp::DESTINATION_UNREACHABLE) {
-				throw 0xBADB0117;
+				throw std::domain_error("wrong packet type");
 			}
 
 			return static_cast<enum icmp::code::destination_unreachable>(packet->code);
@@ -133,7 +133,7 @@ namespace paku {
 		icmp::code() const
 		{
 			if (type() != icmp::REDIRECT_MESSAGE) {
-				throw 0xBADB0117;
+				throw std::domain_error("wrong packet type");
 			}
 
 			return static_cast<enum icmp::code::redirect_message>(packet->code);
@@ -144,7 +144,7 @@ namespace paku {
 		icmp::code() const
 		{
 			if (type() != icmp::PARAMETER_PROBLEM) {
-				throw 0xBADB0117;
+				throw std::domain_error("wrong packet type");
 			}
 
 			return static_cast<enum icmp::code::parameter_problem>(packet->code);
@@ -161,7 +161,7 @@ namespace paku {
 		icmp::details() const
 		{
 			if (type() != icmp::ECHO_REQUEST && type() != icmp::ECHO_REPLY) {
-				throw 0xBADB0117;
+				throw std::domain_error("wrong packet type");
 			}
 
 			return reinterpret_cast<const icmp::echo::raw*>(
@@ -173,7 +173,7 @@ namespace paku {
 		icmp::details() const
 		{
 			if (type() != icmp::TIMESTAMP_REQUEST && type() != icmp::TIMESTAMP_REPLY) {
-				throw 0xBADB0117;
+				throw std::domain_error("wrong packet type");
 			}
 
 			return reinterpret_cast<const icmp::timestamp::raw*>(
@@ -185,7 +185,7 @@ namespace paku {
 		icmp::details() const
 		{
 			if (type() != icmp::INFORMATION_REQUEST && type() != icmp::INFORMATION_REPLY) {
-				throw 0xBADB0117;
+				throw std::domain_error("wrong packet type");
 			}
 
 			return reinterpret_cast<const icmp::information::raw*>(
@@ -197,7 +197,7 @@ namespace paku {
 		icmp::details() const
 		{
 			if (type() != icmp::PARAMETER_PROBLEM) {
-				throw 0xBADB0117;
+				throw std::domain_error("wrong packet type");
 			}
 
 			return reinterpret_cast<const icmp::parameter_problem::raw*>(
@@ -209,7 +209,7 @@ namespace paku {
 		icmp::details() const
 		{
 			if (type() != icmp::REDIRECT_MESSAGE) {
-				throw 0xBADB0117;
+				throw std::domain_error("wrong packet type");
 			}
 
 			return reinterpret_cast<const icmp::redirect_message::raw*>(
@@ -220,8 +220,13 @@ namespace paku {
 		icmp::previous
 		icmp::details() const
 		{
-			if (type() != icmp::SOURCE_QUENCH && type() != icmp::DESTINATION_UNREACHABLE && type() != TIME_EXCEEDED) {
-				throw 0xBADB0117;
+			if (type() != icmp::SOURCE_QUENCH &&
+			    type() != icmp::DESTINATION_UNREACHABLE &&
+			    type() != icmp::TIME_EXCEEDED &&
+			    type() != icmp::PARAMETER_PROBLEM &&
+			    type() != icmp::REDIRECT_MESSAGE)
+			{
+				throw std::domain_error("wrong packet type");
 			}
 
 			return reinterpret_cast<const icmp::previous::raw*>(

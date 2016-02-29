@@ -18,5 +18,11 @@ main (int argc, char* argv[])
 				paku::layer<paku::packet::ether> test(NULL, 14);
 			});
 		}},
+
+		{ "icmp", []{
+			amithrown([]{
+				paku::layer<paku::packet::icmp> test(NULL, 0);
+			});
+		}},
 	});
 }

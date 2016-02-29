@@ -43,7 +43,7 @@ namespace paku {
 				const raw* packet;
 
 			public:
-				arp(const raw* p) : packet(p) { }
+				arp(const void* p) : packet(static_cast<const raw*>(p)) { }
 
 			public:
 				enum hardware hardware() const;

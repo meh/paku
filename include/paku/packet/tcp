@@ -26,7 +26,7 @@ namespace paku {
 				const raw* packet;
 
 			public:
-				tcp(const raw* p) : packet(p) { }
+				tcp(const void* p) : packet(static_cast<const raw*>(p)) { }
 
 			public:
 				uint16_t source() const;

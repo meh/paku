@@ -27,7 +27,7 @@ namespace paku {
 						const raw* packet;
 
 					public:
-						echo(const raw* packet) : packet(packet) { }
+						echo(const void* p) : packet(static_cast<const raw*>(p)) { }
 
 					public:
 						uint16_t identifier() const;
@@ -51,7 +51,7 @@ namespace paku {
 						const raw* packet;
 
 					public:
-						timestamp(const raw* packet) : packet(packet) { }
+						timestamp(const void* p) : packet(static_cast<const raw*>(p)) { }
 
 					public:
 						uint16_t identifier() const;
@@ -93,7 +93,7 @@ namespace paku {
 						const raw* packet;
 
 					public:
-						parameter_problem(const raw* packet) : packet(packet) { }
+						parameter_problem(const void* p) : packet(static_cast<const raw*>(p)) { }
 
 					public:
 						uint8_t pointer() const;
@@ -114,7 +114,7 @@ namespace paku {
 						const raw* packet;
 
 					public:
-						redirect_message(const raw* packet) : packet(packet) { }
+						redirect_message(const void* p) : packet(static_cast<const raw*>(p)) { }
 
 					public:
 						std::string gateway() const;
@@ -135,7 +135,7 @@ namespace paku {
 						const raw* packet;
 
 					public:
-						previous(const raw* packet) : packet(packet) { }
+						previous(const void* p) : packet(static_cast<const raw*>(p)) { }
 
 					public:
 						ip          header() const;
@@ -199,7 +199,7 @@ namespace paku {
 				const raw* packet;
 
 			public:
-				icmp(const raw* p) : packet(p) { }
+				icmp(const void* p) : packet(static_cast<const raw*>(p)) { }
 
 			public:
 				enum type type() const;

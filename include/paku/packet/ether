@@ -28,6 +28,7 @@ namespace paku {
 
 			public:
 				ether(const raw* p) : packet(p) { }
+				ether(const void* p) : packet(static_cast<const raw*>(p)) { }
 
 			public:
 				std::string destination() const;

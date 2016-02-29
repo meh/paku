@@ -1,0 +1,107 @@
+#pragma once
+
+#include "common"
+
+#include "packet/ether"
+#include "packet/ip"
+#include "packet/icmp"
+
+namespace paku {
+	typedef int NONE;
+
+	template<typename Type, typename Parent = NONE>
+	class layer_base {
+		public:
+			layer_base(const uint8_t* buffer, size_t length)
+				: _buffer(buffer),
+					_length(length),
+					_value(reinterpret_cast<const typename Type::raw*>(buffer))
+			{ }
+
+			layer_base(Parent parent, const uint8_t* buffer, size_t length)
+				: layer_base(buffer, length)
+			{
+				_parent = parent;
+			}
+
+		public:
+			const uint8_t*
+			buffer() const
+			{
+				return _buffer;
+			}
+
+			size_t
+			length() const
+			{
+				return _length;
+			}
+
+			std::optional<Parent>
+			parent() const
+			{
+				return _parent;
+			}
+
+			Type* operator->()
+			{
+				return &_value;
+			}
+
+		protected:
+			const uint8_t* _buffer;
+			size_t         _length;
+
+			std::optional<Parent> _parent;
+			Type                  _value;
+	};
+
+	template<typename Type, typename Parent = NONE>
+	class layer : public layer_base<Type, Parent> {
+		public:
+			layer(const uint8_t* buffer, size_t length)
+				: layer_base<Type, Parent>(buffer, length)
+			{ }
+
+			layer(Parent parent, const uint8_t* buffer, size_t length)
+				: layer_base<Type, Parent>(parent, buffer, length)
+			{ }
+	};
+
+	template<typename Parent>
+	class layer<packet::ip, Parent> : public layer_base<packet::ip, Parent> {
+		public:
+			layer(const uint8_t* buffer, size_t length)
+				: layer_base<packet::ip, Parent>(buffer, length)
+			{ }
+
+			layer(Parent parent, const uint8_t* buffer, size_t length)
+				: layer_base<packet::ip, Parent>(parent, buffer, length)
+			{ }
+
+		public:
+			layer<packet::icmp, layer<packet::ip>> icmp()
+			{
+				return layer<packet::icmp, layer<packet::ip>>(*this,
+					this->_buffer + (this->_value.header() * 4),
+					this->_length - (this->_value.header() * 4));
+			}
+	};
+
+	template<>
+	class layer<packet::ether, NONE> : public layer_base<packet::ether, NONE> {
+		public:
+			layer(const uint8_t* buffer, size_t length)
+				: layer_base<packet::ether, NONE>(buffer, length)
+			{ }
+
+		public:
+			layer<packet::ip, layer<packet::ether>>
+			ip()
+			{
+				return layer<packet::ip, layer<packet::ether>>(*this,
+					this->_buffer + sizeof(packet::ether::raw),
+					this->_length - sizeof(packet::ether::raw));
+			}
+	};
+}

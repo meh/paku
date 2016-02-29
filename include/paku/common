@@ -1,0 +1,24 @@
+#pragma once
+
+#include "optional.hpp"
+#include "variant.hpp"
+
+#include <stdint.h>
+#include <netinet/in.h>
+
+#include <iomanip>
+#include <sstream>
+
+#include <cstring>
+#include <memory>
+
+#include <vector>
+#include <bitset>
+#include <string>
+
+namespace paku {
+	using std::experimental::optional;
+	using std::experimental::make_optional;
+	using std::experimental::nullopt;
+	using mapbox::util::variant;
+}

@@ -1,0 +1,20 @@
+#pragma once
+
+#include "common"
+#include "builder/buffer"
+
+namespace paku {
+	namespace builder {
+		class base {
+			public:
+				base(std::shared_ptr<builder::buffer> buf);
+				base();
+
+			public:
+				std::shared_ptr<builder::buffer> buffer();
+
+			protected:
+				std::shared_ptr<builder::buffer> _buffer;
+		};
+	}
+}

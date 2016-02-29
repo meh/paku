@@ -1,0 +1,39 @@
+#pragma once
+
+#include "common"
+
+namespace paku {
+	namespace packet {
+		class ether {
+			static const int ADDR_LEN = 6;
+
+			public:
+				struct raw {
+					uint8_t  destination[ADDR_LEN];
+					uint8_t  source[ADDR_LEN];
+					uint16_t type;
+				};
+
+				enum type : uint16_t {
+					IPv4 = 0x0800,
+					ARP  = 0x0806,
+					IPv6 = 0x86DD,
+				};
+
+			public:
+				static std::string address(const uint8_t* addr);
+
+			private:
+				const raw* packet;
+
+			public:
+				ether(const raw* p) : packet(p) { }
+
+			public:
+				std::string destination() const;
+				std::string source() const;
+
+				enum type type() const;
+		};
+	}
+}

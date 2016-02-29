@@ -1,23 +1,26 @@
 TARGET = libpaku
 
-CXXFLAGS = -std=c++1y -Iinclude -Iinclude/paku -Ivendor/optional -Ivendor/variant -fPIC -Wall -Wextra -Os
+CXXFLAGS = -std=c++1y -Iinclude -Iinclude -Ivendor/optional -Ivendor/variant -fPIC -Wall -Wextra -Os
 LDFLAGS =
 
-SRCS = \
+SOURCES = \
 	source/packet/ether.cpp source/packet/arp.cpp source/packet/ip.cpp source/packet/icmp.cpp source/packet/tcp.cpp \
 	source/builder/base.cpp source/builder/buffer.cpp source/builder/icmp.cpp
-
-OBJS = $(SRCS:.cpp=.o)
 
 .PHONY: all
 all: ${TARGET}.so ${TARGET}.a
 
-$(TARGET).so: $(OBJS)
-	$(CXX) ${LDFLAGS} -shared -o $@.so $^
+$(TARGET).so: $(SOURCES:.cpp=.o)
+	$(CXX) ${LDFLAGS} -shared -o $@ $^
 
-$(TARGET).a: $(OBJS)
-	$(AR) rcs $@.a $^
+$(TARGET).a: $(SOURCES:.cpp=.o)
+	$(AR) rcs $@ $^
+
+.PHONY: test
+test: ${TARGET}.a
+	@$(CXX) ${CXXFLAGS} -Wno-unused-function -Ivendor/amirite -o test/layer test/layer.cpp ${TARGET}.a
+	@test/layer
 
 .PHONY: clean
 clean:
-	-${RM} ${TARGET_LIB} ${OBJS}
+	-${RM} ${TARGET}.so ${TARGET}.a $(SOURCES:.cpp=.o)

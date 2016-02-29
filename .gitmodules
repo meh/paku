@@ -4,3 +4,6 @@
 [submodule "vendor/variant"]
 	path = vendor/variant
 	url = https://github.com/mapbox/variant.git
+[submodule "vendor/amirite"]
+	path = vendor/amirite
+	url = https://github.com/meh/amirite

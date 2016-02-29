@@ -33,7 +33,7 @@ namespace paku {
 				};
 
 				struct result {
-					typedef paku::variant<std::string, std::vector<uint8_t>> type;
+					typedef variant<std::string, std::vector<uint8_t>> type;
 
 					type hardware;
 					type protocol;

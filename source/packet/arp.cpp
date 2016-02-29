@@ -1,6 +1,6 @@
-#include "packet/ether"
-#include "packet/arp"
-#include "packet/ip"
+#include <paku/packet/ether>
+#include <paku/packet/arp>
+#include <paku/packet/ip>
 
 namespace paku {
 	namespace packet {

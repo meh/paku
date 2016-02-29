@@ -1,4 +1,4 @@
-#include "packet/ether"
+#include <paku/packet/ether>
 
 namespace paku {
 	namespace packet {

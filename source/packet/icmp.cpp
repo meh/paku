@@ -1,5 +1,5 @@
-#include "packet/ip"
-#include "packet/icmp"
+#include <paku/packet/ip>
+#include <paku/packet/icmp>
 
 namespace paku {
 	namespace packet {
@@ -229,7 +229,7 @@ namespace paku {
 		}
 	}
 
-	paku::optional<std::string>
+	optional<std::string>
 	to_string(enum packet::icmp::type type)
 	{
 		switch (type) {
@@ -282,11 +282,11 @@ namespace paku {
 				return std::string("traceroute");
 
 			default:
-				return paku::nullopt;
+				return nullopt;
 		}
 	}
 
-	paku::optional<std::string>
+	optional<std::string>
 	to_string(enum packet::icmp::code::destination_unreachable code)
 	{
 		switch (code) {
@@ -339,11 +339,11 @@ namespace paku {
 				return std::string("precedent-cutoff-in-effect");
 
 			default:
-				return paku::nullopt;
+				return nullopt;
 		}
 	}
 
-	paku::optional<std::string>
+	optional<std::string>
 	to_string(enum packet::icmp::code::redirect_message code)
 	{
 		switch (code) {
@@ -360,11 +360,11 @@ namespace paku {
 				return std::string("redirect-datagram-for-tos-and-host");
 
 			default:
-				return paku::nullopt;
+				return nullopt;
 		}
 	}
 
-	paku::optional<std::string>
+	optional<std::string>
 	to_string(enum packet::icmp::code::parameter_problem code)
 	{
 		switch (code) {
@@ -378,7 +378,7 @@ namespace paku {
 				return std::string("bad-length");
 
 			default:
-				return paku::nullopt;
+				return nullopt;
 		}
 	}
 }

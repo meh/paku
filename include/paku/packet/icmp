@@ -214,8 +214,8 @@ namespace paku {
 		};
 	}
 
-	paku::optional<std::string> to_string(enum packet::icmp::type type);
-	paku::optional<std::string> to_string(enum packet::icmp::code::destination_unreachable code);
-	paku::optional<std::string> to_string(enum packet::icmp::code::redirect_message code);
-	paku::optional<std::string> to_string(enum packet::icmp::code::parameter_problem code);
+	optional<std::string> to_string(enum packet::icmp::type type);
+	optional<std::string> to_string(enum packet::icmp::code::destination_unreachable code);
+	optional<std::string> to_string(enum packet::icmp::code::redirect_message code);
+	optional<std::string> to_string(enum packet::icmp::code::parameter_problem code);
 }

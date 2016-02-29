@@ -1,7 +1,7 @@
 #pragma once
 
-#include "optional.hpp"
-#include "variant.hpp"
+#include <optional.hpp>
+#include <variant.hpp>
 
 #include <stdint.h>
 #include <netinet/in.h>
@@ -12,6 +12,8 @@
 #include <cstdlib>
 #include <cstring>
 #include <memory>
+#include <exception>
+#include <stdexcept>
 
 #include <vector>
 #include <bitset>

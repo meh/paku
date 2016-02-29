@@ -1,4 +1,4 @@
-#include "builder/buffer"
+#include <paku/builder/buffer>
 
 namespace paku {
 	namespace builder {

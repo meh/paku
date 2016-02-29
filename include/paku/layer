@@ -5,6 +5,7 @@
 #include <paku/packet/ether>
 #include <paku/packet/ip>
 #include <paku/packet/icmp>
+#include <paku/packet/tcp>
 
 namespace paku {
 	typedef int NONE;
@@ -37,10 +38,16 @@ namespace paku {
 				return _length;
 			}
 
-			std::optional<Parent>
+			optional<Parent>
 			parent() const
 			{
 				return _parent;
+			}
+
+			const Type&
+			value() const
+			{
+				return _value;
 			}
 
 			Type* operator->()
@@ -48,12 +55,12 @@ namespace paku {
 				return &_value;
 			}
 
-		protected:
+		private:
 			const uint8_t* _buffer;
 			size_t         _length;
 
-			std::optional<Parent> _parent;
-			Type                  _value;
+			optional<Parent> _parent;
+			Type             _value;
 	};
 
 	template<typename Type, typename Parent = NONE>
@@ -73,18 +80,48 @@ namespace paku {
 		public:
 			layer(const uint8_t* buffer, size_t length)
 				: layer_base<packet::ip, Parent>(buffer, length)
-			{ }
+			{ check(); }
 
 			layer(Parent parent, const uint8_t* buffer, size_t length)
 				: layer_base<packet::ip, Parent>(parent, buffer, length)
-			{ }
+			{ check(); }
+
+		private:
+			void
+			check()
+			{
+				if (this->length() < 1) {
+					throw std::length_error("buffer too small");
+				}
+
+				if (this->length() < this->value().header() * 4) {
+					throw std::length_error("buffer too small");
+				}
+			}
 
 		public:
-			layer<packet::icmp, layer<packet::ip>> icmp()
+			layer<packet::icmp, layer<packet::ip>>
+			icmp()
 			{
+				if (this->value().protocol() != packet::ip::ICMP) {
+					throw std::invalid_argument("wrong packet type");
+				}
+
 				return layer<packet::icmp, layer<packet::ip>>(*this,
-					this->_buffer + (this->_value.header() * 4),
-					this->_length - (this->_value.header() * 4));
+					this->buffer() + (this->value().header() * 4),
+					this->length() - (this->value().header() * 4));
+			}
+
+			layer<packet::tcp, layer<packet::ip>>
+			tcp()
+			{
+				if (this->value().protocol() != packet::ip::TCP) {
+					throw std::invalid_argument("wrong packet type");
+				}
+
+				return layer<packet::tcp, layer<packet::ip>>(*this,
+					this->buffer() + (this->value().header() * 4),
+					this->length() - (this->value().header() * 4));
 			}
 	};
 
@@ -93,15 +130,28 @@ namespace paku {
 		public:
 			layer(const uint8_t* buffer, size_t length)
 				: layer_base<packet::ether, NONE>(buffer, length)
-			{ }
+			{ check(); }
+
+		private:
+			void
+			check()
+			{
+				if (this->length() < sizeof(packet::ether::raw)) {
+					throw std::length_error("buffer too small");
+				}
+			}
 
 		public:
 			layer<packet::ip, layer<packet::ether>>
 			ip()
 			{
+				if (this->value().type() != packet::ether::IPv4) {
+					throw std::invalid_argument("wrong packet type");
+				}
+
 				return layer<packet::ip, layer<packet::ether>>(*this,
-					this->_buffer + sizeof(packet::ether::raw),
-					this->_length - sizeof(packet::ether::raw));
+					this->buffer() + sizeof(packet::ether::raw),
+					this->length() - sizeof(packet::ether::raw));
 			}
 	};
 }

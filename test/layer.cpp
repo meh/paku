@@ -2,6 +2,8 @@
 #include <amirite>
 #include <paku/layer>
 
+using namespace paku;
+
 int
 main (int argc, char* argv[])
 {
@@ -11,17 +13,29 @@ main (int argc, char* argv[])
 	return amirite("layer", {
 		{ "ether", []{
 			amithrown([]{
-				paku::layer<paku::packet::ether> test(NULL, 0);
+				layer<packet::ether> test(NULL, 0);
 			});
 
 			amiokay([]{
-				paku::layer<paku::packet::ether> test(NULL, 14);
+				layer<packet::ether> test(NULL, 14);
+			});
+		}},
+
+		{ "ip", []{
+			amithrown([]{
+				layer<packet::ip> test(NULL, 0);
 			});
 		}},
 
 		{ "icmp", []{
 			amithrown([]{
-				paku::layer<paku::packet::icmp> test(NULL, 0);
+				layer<packet::icmp> test(NULL, 3);
+			});
+		}},
+
+		{ "tcp", []{
+			amithrown([]{
+				layer<packet::tcp> test(NULL, 12);
 			});
 		}},
 	});

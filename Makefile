@@ -19,7 +19,10 @@ $(TARGET).a: $(SOURCES:.cpp=.o)
 .PHONY: test
 test: ${TARGET}.a
 	@$(CXX) ${CXXFLAGS} -Wno-unused-function -Ivendor/amirite -o test/layer test/layer.cpp ${TARGET}.a
+	@$(CXX) ${CXXFLAGS} -Wno-unused-function -Ivendor/amirite -o test/limits test/limits.cpp ${TARGET}.a
+	
 	@test/layer
+	@test/limits
 
 .PHONY: clean
 clean:

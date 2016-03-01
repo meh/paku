@@ -1,0 +1,49 @@
+#include <paku/common>
+
+#include <paku/packet/ether>
+#include <paku/packet/arp>
+#include <paku/packet/ip>
+#include <paku/packet/icmp>
+#include <paku/packet/tcp>
+
+namespace paku {
+	namespace packet {
+		template<typename T>
+		class limits { };
+
+		template<>
+		class limits<ether> {
+			public:
+				constexpr static size_t min() { return sizeof(ether::raw); }
+				constexpr static size_t max() { return sizeof(ether::raw); }
+		};
+
+		template<>
+		class limits<arp> {
+			public:
+				constexpr static size_t min() { return 28; }
+				constexpr static size_t max() { return 28; }
+		};
+
+		template<>
+		class limits<ip> {
+			public:
+				constexpr static size_t min() { return 20; }
+				constexpr static size_t max() { return 60; }
+		};
+
+		template<>
+		class limits<icmp> {
+			public:
+				constexpr static size_t min() { return 8; }
+				constexpr static size_t max() { return 76; }
+		};
+
+		template<>
+		class limits<tcp> {
+			public:
+				constexpr static size_t min() { return 20; }
+				constexpr static size_t max() { return 60; }
+		};
+	}
+}

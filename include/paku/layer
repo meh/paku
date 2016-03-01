@@ -76,6 +76,33 @@ namespace paku {
 	};
 
 	template<typename Parent>
+	class layer<packet::tcp, Parent> : public layer_base<packet::tcp, Parent> {
+		public:
+			layer(const void* buffer, size_t length)
+				: layer_base<packet::tcp, Parent>(buffer, length)
+			{ check(); }
+
+			layer(Parent parent, const void* buffer, size_t length)
+				: layer_base<packet::tcp, Parent>(parent, buffer, length)
+			{ check(); }
+
+		private:
+			void
+			check()
+			{
+				// check if the offset field is in the thing
+				if (this->length() < 13) {
+					throw std::length_error("buffer too small");
+				}
+
+				// header length
+				if (this->length() < this->value().offset() * 4) {
+					throw std::length_error("buffer too small");
+				}
+			}
+	};
+
+	template<typename Parent>
 	class layer<packet::icmp, Parent> : public layer_base<packet::icmp, Parent> {
 		public:
 			layer(const void* buffer, size_t length)
@@ -204,11 +231,15 @@ namespace paku {
 			}
 	};
 
-	template<>
-	class layer<packet::ether, NONE> : public layer_base<packet::ether, NONE> {
+	template<typename Parent>
+	class layer<packet::ether, Parent> : public layer_base<packet::ether, Parent> {
 		public:
 			layer(const void* buffer, size_t length)
 				: layer_base<packet::ether, NONE>(buffer, length)
+			{ check(); }
+
+			layer(Parent parent, const void* buffer, size_t length)
+				: layer_base<packet::ether, Parent>(parent, buffer, length)
 			{ check(); }
 
 		private:
